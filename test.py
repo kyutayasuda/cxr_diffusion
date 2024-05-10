@@ -11,7 +11,8 @@ import torchvision
 from PIL import Image
 
 def gen_cxr_path(prompt):
-    resume_path = '/mnt/sda/yangling/mimic_controlnet/ckpt/20+20epoch_prompt_sd_unlocked_10epochfinetune.ckpt'
+    resume_path = '/content/drive/My Drive/Uni/csit998/finetune_prompt2cxr.ckpt'
+
     batch_size = 1
     logger_freq = 1
     learning_rate = 1e-5
