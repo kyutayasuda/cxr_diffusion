@@ -1,5 +1,7 @@
+import argparse
 from share import *
 
+import pandas as pd
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from tutorial_dataset import MyInference
@@ -10,7 +12,7 @@ import torch
 import torchvision
 from PIL import Image
 
-def gen_cxr_path(prompt):
+def gen_cxr_path(prompt, file_name):
     resume_path = '/content/drive/My Drive/Uni/csit998/finetune_prompt2cxr.ckpt'
 
     batch_size = 1
@@ -37,9 +39,22 @@ def gen_cxr_path(prompt):
     grid = grid.transpose(0, 1).transpose(1, 2).squeeze(-1)
     grid = grid.cpu().numpy()
     grid = (grid * 255).astype(np.uint8)
-    path = './gen_cxr.png'
+    path = f'./{file_name}.png'
     Image.fromarray(grid).save(path)
     return path
 
-img_path = gen_cxr_path('Lateral view of the chest was obtained. The previously seen multifocal bibasilar airspace opacities have almost completely resolved with only slight scarring seen at the bases. There are new ill-defined bilateral linear opacities seen in the upper lobes, which given their slight retractile behavior are likely related to radiation fibrosis.')
-print(img_path)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate Chest X-Ray Image from Prompt")
+    parser.add_argument("--csv_path", type=str, required=True, help="Path to the CSV file containing prompts and file names")
+
+    args = parser.parse_args()
+
+    # Load the CSV file into a DataFrame
+    df = pd.read_csv(args.csv_path)
+
+    # Iterate over DataFrame rows and generate images
+    for index, row in df.iterrows():
+        prompt = row['findings']
+        file_name = row['number']
+        img_path = gen_cxr_path(prompt, file_name)
+        print(f"Generated image saved at: {img_path}")
