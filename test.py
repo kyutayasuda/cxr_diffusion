@@ -1,5 +1,3 @@
-from share import *
-
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from tutorial_dataset import MyInference
@@ -17,7 +15,6 @@ def gen_cxr_path(prompt):
     learning_rate = 1e-5
     sd_locked = False
     only_mid_control = False
-
 
     # First use cpu to load models. Pytorch Lightning will automatically move it to GPUs.
     model = create_model('./models/cldm_v21.yaml').cpu()
@@ -39,6 +36,3 @@ def gen_cxr_path(prompt):
     path = './gen_cxr.png'
     Image.fromarray(grid).save(path)
     return path
-
-img_path = gen_cxr_path('Lateral view of the chest was obtained. The previously seen multifocal bibasilar airspace opacities have almost completely resolved with only slight scarring seen at the bases. There are new ill-defined bilateral linear opacities seen in the upper lobes, which given their slight retractile behavior are likely related to radiation fibrosis.')
-print(img_path)
